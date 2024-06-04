@@ -30,7 +30,7 @@ public class Users {
 	private String password;
 	
 	@Column(name="profileImage")
-	private String profileImage;
+	private String profileImage = "";
 	
 	@Column(name="createdAt",updatable = false)
 	private Date createdAt;
@@ -39,9 +39,21 @@ public class Users {
 	private Date updatedAt;
 	
 	@Column(name="bio")
-	private String bio;
+	private String bio = "";
 	
 	
+	@Column(name="seller")
+	private boolean seller = false;
+	
+	
+	public boolean getSeller() {
+		return seller;
+	}
+
+	public void setSeller(boolean seller) {
+		this.seller = seller;
+	}
+
 	@PrePersist
 	public void createDate() {
 		createdAt = new Date();

@@ -30,12 +30,45 @@ public class UsersServiceImplement implements UserService {
 		
 		System.out.println("user request in seveImple :"+request);
 		
+		Users mailCheck = userRepo.findByEmail(user.getEmail());
+		
+		if(mailCheck != null) {
+			return new Response(0,"fail","Email already exists");
+		}else {
+			
 		tableUser.setEmail(user.getEmail());
 		tableUser.setPassword(user.getPassword());
 		tableUser.setUserName(user.getUserName());
 		tableUser.setBio(user.getBio());
+		tableUser.setSeller(user.getSeller());
 		
 		return new Response(1,"success",userRepo.save(tableUser));
+		}
+	}
+
+	@Override
+	public Response logIn(UsersWebModel user, HttpServletRequest request) {
+		
+		Users tableUser = userRepo.login(user.getEmail(), user.getPassword());
+		
+		Users mailCheck = userRepo.findByEmail(user.getEmail());
+		
+		System.out.println("mail checking from table"+mailCheck);
+		
+		System.out.println("users in login :"+tableUser);
+		
+		
+		if(mailCheck == null) {
+			return new Response(0,"fail","Enter valid email");
+		}else if( mailCheck != null && tableUser == null) {
+			return new Response(0,"fail","Enter valid password");
+		}else if(tableUser == null) {
+			return new Response(0,"fail","User doesn't exist");
+		}else {
+			return new Response(1,"succes",tableUser);
+		}
+		
+	
 	}
 
 }

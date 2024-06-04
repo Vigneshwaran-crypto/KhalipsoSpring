@@ -8,5 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public interface UserService {
 	
 	Response saveUser(UsersWebModel user,HttpServletRequest request);
+	
+	Response logIn(UsersWebModel user,HttpServletRequest request);
 
 }

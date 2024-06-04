@@ -4,16 +4,22 @@ import java.util.Date;
 
 public class UsersWebModel {
 	
-	
 	private Integer id;
 	private String userName;
 	private String email;
 	private String password;
-	private String profileImage;
+	private String profileImage = "";
 	private Date createdAt;
 	private Date updatedAt;
-	private String bio;
+	private String bio = "";
+	private boolean seller = false;
 	
+	public boolean getSeller() {
+		return seller;
+	}
+	public void setSeller(boolean seller) {
+		this.seller = seller;
+	}
 	public Integer getId() {
 		return id;
 	}
