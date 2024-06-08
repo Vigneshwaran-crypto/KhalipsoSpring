@@ -41,19 +41,24 @@ public class UsersController {
 	@PostMapping("login")
 	public ResponseEntity<Response> logIn(@RequestBody UsersWebModel user,HttpServletRequest request){
 		try {
-			
-			
 			System.out.println("request from client :"+user);
-			
 			return new ResponseEntity<Response>(userService.logIn(user, request),HttpStatus.OK);
-			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return ResponseEntity.internalServerError().body(new Response(-1,"API Failed",null));
-		
-		
 	}
 
+	@PostMapping("editUser")
+	public ResponseEntity<Response> editUser(@RequestBody UsersWebModel user){
+		try {
+			
+			return new ResponseEntity<Response>(userService.editUser(user),HttpStatus.OK);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return ResponseEntity.internalServerError().body(new Response(0,"failed",null));
+	}
 
 }

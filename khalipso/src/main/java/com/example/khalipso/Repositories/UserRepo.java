@@ -1,5 +1,7 @@
 package com.example.khalipso.Repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,8 +20,9 @@ public interface UserRepo extends JpaRepository<Users, Integer> {
 	
 	@Query(value = "SELECT * FROM users WHERE email=:email AND password=:password",nativeQuery = true)
 	Users login(@Param("email") String email , @Param("password") String password);
+
+	Optional<Users> findByEmail(String email);
 	
-	Users findByEmail(String email);
 	
 
 }

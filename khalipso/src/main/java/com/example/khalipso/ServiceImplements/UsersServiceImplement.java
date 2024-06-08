@@ -1,5 +1,7 @@
 package com.example.khalipso.ServiceImplements;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -30,9 +32,10 @@ public class UsersServiceImplement implements UserService {
 		
 		System.out.println("user request in seveImple :"+request);
 		
-		Users mailCheck = userRepo.findByEmail(user.getEmail());
+		//Users mailCheck = userRepo.findByEmail(user.getEmail());
+		Optional<Users> mailCheck = userRepo.findByEmail(user.getEmail());
 		
-		if(mailCheck != null) {
+		if(mailCheck.isPresent()) {
 			return new Response(0,"fail","Email already exists");
 		}else {
 			
@@ -49,26 +52,62 @@ public class UsersServiceImplement implements UserService {
 	@Override
 	public Response logIn(UsersWebModel user, HttpServletRequest request) {
 		
-		Users tableUser = userRepo.login(user.getEmail(), user.getPassword());
-		
-		Users mailCheck = userRepo.findByEmail(user.getEmail());
+//		Users tableUser = userRepo.login(user.getEmail(), user.getPassword());
+				
+		Optional<Users> mailCheck = userRepo.findByEmail(user.getEmail());
 		
 		System.out.println("mail checking from table"+mailCheck);
 		
-		System.out.println("users in login :"+tableUser);
-		
-		
-		if(mailCheck == null) {
-			return new Response(0,"fail","Enter valid email");
-		}else if( mailCheck != null && tableUser == null) {
-			return new Response(0,"fail","Enter valid password");
-		}else if(tableUser == null) {
-			return new Response(0,"fail","User doesn't exist");
+		if(mailCheck.isPresent()) {
+			Users userExist = mailCheck.get();
+			
+			System.out.println("exist user : "+userExist);
+			
+			System.out.println("exist user pass: "+userExist.getPassword());
+			System.out.println("request user pass:"+user.getPassword());
+			
+			String existPass = userExist.getPassword();
+			String clientPass = user.getPassword();
+			
+			if(existPass.equalsIgnoreCase(clientPass)) {
+				return new Response(1,"success","Hello User!!!");
+			}
+			else {
+				return new Response(0,"fail","Enter valid password");
+
+			}
+				
+
 		}else {
-			return new Response(1,"succes",tableUser);
+			return new Response(0, "fail" ,"No User Found");
 		}
 		
-	
+	}
+
+	@Override
+	public Response editUser(UsersWebModel user) {
+		System.out.println("user in serviceImplementation : "+user);
+		
+		Optional<Users> existUser = userRepo.findByEmail(user.getEmail());
+		System.out.println("existUser user in serviceImplementation : "+existUser.get());
+		if(existUser.isPresent()) {
+			Users dbUser = existUser.get();
+			dbUser.setEmail(user.getEmail());
+			dbUser.setPassword(user.getPassword());
+			dbUser.setBio(user.getBio());
+			dbUser.setProfileImage(user.getProfileImage());
+			dbUser.setUserName(user.getUserName());
+			userRepo.saveAndFlush(dbUser);
+			return new Response(1,"success",dbUser);
+		}else {
+			return new Response(0,"fail",null);
+		}
+		
+		
+		
+		
+		
+		
 	}
 
 }
