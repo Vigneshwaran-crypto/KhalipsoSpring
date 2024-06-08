@@ -24,5 +24,8 @@ public interface UserRepo extends JpaRepository<Users, Integer> {
 	Optional<Users> findByEmail(String email);
 	
 	
+	//Users updateUser(@Param("email") String email,@Param("password") String password,@Param("userName"))
+	
+	
 
 }
