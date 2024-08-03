@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +32,7 @@ public class UsersController {
 		try {
 			return new ResponseEntity<Response>(userService.saveUser(user,request),HttpStatus.OK);
 		}catch(Exception e) {
-			System.out.println("Error occurred in saveUser api");
+			System.out.println("Error occurred in saveUser api"); 
 			e.printStackTrace();
 		}
 		return ResponseEntity.internalServerError().body(new Response(-1,"API Faild", null));
@@ -52,13 +53,40 @@ public class UsersController {
 	@PostMapping("editUser")
 	public ResponseEntity<Response> editUser(@RequestBody UsersWebModel user){
 		try {
-			
 			return new ResponseEntity<Response>(userService.editUser(user),HttpStatus.OK);
-			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return ResponseEntity.internalServerError().body(new Response(0,"failed",null));
 	}
+	
+	
+	@PostMapping("imageUpload")
+	public ResponseEntity<Response>imageUpload(@ModelAttribute UsersWebModel user){
+		try {
+			
+			System.out.println("imageUpload client request :"+user.getProfileImageFile());
+			
+			return new ResponseEntity<Response>(userService.imageUpload(user),HttpStatus.OK);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return ResponseEntity.internalServerError().body(new Response(0,"failed",null));
+	}
+	
+	
+	@PostMapping("updateUser")
+	public ResponseEntity<Response> updateUser(@ModelAttribute UsersWebModel user){
+		try {
+			
+			return new ResponseEntity<Response>(userService.updateUser(user),HttpStatus.OK);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ResponseEntity.internalServerError().body(new Response(0,"falied",null));
+	}
+	
 
 }

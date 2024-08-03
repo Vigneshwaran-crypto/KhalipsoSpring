@@ -16,7 +16,7 @@ import com.example.khalipso.WebModels.UsersWebModel;
 @Repository
 public interface UserRepo extends JpaRepository<Users, Integer> {
 
-	Response save(UsersWebModel user);
+//	Response save(UsersWebModel user);
 	
 	@Query(value = "SELECT * FROM users WHERE email=:email AND password=:password",nativeQuery = true)
 	Users login(@Param("email") String email , @Param("password") String password);

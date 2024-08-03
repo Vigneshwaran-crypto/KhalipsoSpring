@@ -2,6 +2,8 @@ package com.example.khalipso.Entities;
 
 import java.util.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,7 +47,7 @@ public class Users {
 	@Column(name="seller")
 	private boolean seller = false;
 	
-	
+
 	public boolean getSeller() {
 		return seller;
 	}

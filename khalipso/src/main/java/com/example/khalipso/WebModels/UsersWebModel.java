@@ -2,6 +2,8 @@ package com.example.khalipso.WebModels;
 
 import java.util.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class UsersWebModel {
 	
 	private Integer id;
@@ -13,7 +15,16 @@ public class UsersWebModel {
 	private Date updatedAt;
 	private String bio = "";
 	private boolean seller = false;
+	private MultipartFile profileImageFile;
 	
+	
+	
+	public MultipartFile getProfileImageFile() {
+		return profileImageFile;
+	}
+	public void setProfileImageFile(MultipartFile profileImageFile) {
+		this.profileImageFile = profileImageFile;
+	}
 	public boolean getSeller() {
 		return seller;
 	}
@@ -72,7 +83,7 @@ public class UsersWebModel {
 	public String toString() {
 		return "UsersWebModel [id=" + id + ", userName=" + userName + ", email=" + email + ", password=" + password
 				+ ", profileImage=" + profileImage + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", bio="
-				+ bio + "]";
+				+ bio + ", seller=" + seller + ", profileImageFile=" + profileImageFile + "]";
 	}
 	
 	

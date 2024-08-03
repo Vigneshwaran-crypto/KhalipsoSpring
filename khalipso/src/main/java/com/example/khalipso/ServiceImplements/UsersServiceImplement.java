@@ -1,11 +1,18 @@
 package com.example.khalipso.ServiceImplements;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.khalipso.Components.AppProperties;
 import com.example.khalipso.Entities.Users;
 import com.example.khalipso.Repositories.UserRepo;
 import com.example.khalipso.Services.UserService;
@@ -19,9 +26,13 @@ import jakarta.servlet.http.HttpServletRequest;
 public class UsersServiceImplement implements UserService {
 	
 	
-	
 	@Autowired
 	UserRepo userRepo;
+	
+
+	
+	@Autowired
+	AppProperties appProps;
 
 	@Override
 	public Response saveUser(UsersWebModel user, HttpServletRequest request) {
@@ -51,9 +62,7 @@ public class UsersServiceImplement implements UserService {
 
 	@Override
 	public Response logIn(UsersWebModel user, HttpServletRequest request) {
-		
-//		Users tableUser = userRepo.login(user.getEmail(), user.getPassword());
-				
+					
 		Optional<Users> mailCheck = userRepo.findByEmail(user.getEmail());
 		
 		System.out.println("mail checking from table"+mailCheck);
@@ -70,7 +79,15 @@ public class UsersServiceImplement implements UserService {
 			String clientPass = user.getPassword();
 			
 			if(existPass.equalsIgnoreCase(clientPass)) {
-				return new Response(1,"success","Hello User!!!");
+				
+				
+				Map<String,Object> mapUser = new HashMap<>();
+				
+				mapUser.put("id", userExist.getId());
+				mapUser.put("email", userExist.getEmail());
+				mapUser.put("userName", userExist.getUserName());
+				mapUser.put("isSeller", userExist.getSeller());		
+				return new Response(1,"success",mapUser);
 			}
 			else {
 				return new Response(0,"fail","Enter valid password");
@@ -108,6 +125,75 @@ public class UsersServiceImplement implements UserService {
 		
 		
 		
+	}
+
+	@Override
+	public Response imageUpload(UsersWebModel user) {
+		
+//		System.out.println("uploaded image in userServiceImplementation :"+user.getProfileImageFile());
+//		System.out.println("bio in userServiceImplementation :"+user.getBio());
+		
+		
+		try {
+			
+			
+			MultipartFile imgFile = user.getProfileImageFile();
+			
+			
+			long imgSize = imgFile.getSize()/1024;
+			
+			System.out.println("file size : "+imgSize);
+			
+//			if(imgSize > 20) {
+//				
+//				return new Response(0,"fail","Large size of image");
+//				
+//			}else {
+				
+				String fileName = imgFile.getOriginalFilename();
+				String location =  appProps.getAssetPath();
+//				String time = new SimpleDateFormat("DD-MM-YYYY").format(new Date());
+//				String extension =  fileName.substring(fileName.lastIndexOf(".")+1);
+//				String dbFileName = +"-"+time+"-"+extension;;
+				String path = location+fileName;
+				
+				File file = new File(path);
+				imgFile.transferTo(file);
+				
+				return new Response(1,"success",user.getProfileImageFile().getOriginalFilename());
+				
+//			}
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new Response(0,"fail",null);
+		}
+		
+		
+		
+		
+	}
+
+	@Override
+	public Response updateUser(UsersWebModel user) {
+	
+		
+		System.out.println("api hit implementation :"+user);
+		
+		Optional<Users> dbUser = userRepo.findByEmail(user.getEmail());
+		
+		Users usr = dbUser.get();
+	
+		usr.setEmail(user.getEmail());
+		usr.setPassword(user.getPassword());
+		usr.setBio(user.getBio());
+		usr.setProfileImage(user.getProfileImageFile().getOriginalFilename());
+		usr.setId(user.getId());
+		usr.setUserName(user.getUserName());
+		
+		
+		return new Response(1,"testing",userRepo.save(usr));
 	}
 
 }

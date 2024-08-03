@@ -12,5 +12,9 @@ public interface UserService {
 	Response logIn(UsersWebModel user,HttpServletRequest request);
 	
 	Response editUser(UsersWebModel user);
+	
+	Response imageUpload(UsersWebModel user);
+	
+	Response updateUser(UsersWebModel user);
 
 }
